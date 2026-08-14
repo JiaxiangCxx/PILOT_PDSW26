@@ -1,0 +1,15 @@
+candidate frames: 10000
+application frames: 9952
+decision frames: 9952
+mean PSNR accuracy: 97.875190%
+mean SSIM accuracy: 93.998204%
+mean CR accuracy: 88.965820%
+selected mean PSNR accuracy: 95.924097%
+selected mean SSIM accuracy: 99.996487%
+selected mean CR accuracy: 88.336768%
+compressor + EB correct: 93.05%
+compressor correct: 98.87%
+EB correct: 93.11%
+selection coverage: 100.00%
+evaluation coverage: 100.00%
+mean relative joint-score gap: 0.415321%

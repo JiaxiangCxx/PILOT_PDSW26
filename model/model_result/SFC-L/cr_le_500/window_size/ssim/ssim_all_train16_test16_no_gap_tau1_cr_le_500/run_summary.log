@@ -1,0 +1,11 @@
+candidate frames: 10000
+application frames: 9968
+decision frames: 9968
+mean SSIM accuracy: 95.693562%
+selected mean SSIM accuracy: 99.979816%
+compressor + EB correct: 45.29%
+compressor correct: 80.17%
+EB correct: 50.00%
+selection coverage: 100.00%
+evaluation coverage: 100.00%
+mean relative joint-score gap: 0.012966%

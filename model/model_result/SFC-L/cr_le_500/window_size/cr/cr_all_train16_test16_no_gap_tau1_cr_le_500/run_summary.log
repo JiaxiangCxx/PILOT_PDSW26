@@ -1,0 +1,11 @@
+candidate frames: 10000
+application frames: 9968
+decision frames: 9968
+mean CR accuracy: 86.977933%
+selected mean CR accuracy: 77.528914%
+compressor + EB correct: 89.75%
+compressor correct: 89.75%
+EB correct: 99.92%
+selection coverage: 100.00%
+evaluation coverage: 100.00%
+mean relative joint-score gap: 0.410449%

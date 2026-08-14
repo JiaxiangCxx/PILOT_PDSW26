@@ -1,0 +1,8 @@
+.conda/
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
+artifact/output/
+lightsource_data_cmp_results/*/*.py

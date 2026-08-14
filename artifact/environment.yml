@@ -1,0 +1,14 @@
+name: pilot-ae
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy=2.2.5
+  - pandas=2.3.3
+  - scikit-learn=1.7.2
+  - matplotlib=3.10.6
+  - scipy=1.15.3
+  - jupyter=1.1.1
+  - jupyter_core=5.8.1
+  - nbconvert=7.16.6
+  - ipykernel=6.30.1

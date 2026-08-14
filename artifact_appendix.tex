@@ -1,0 +1,264 @@
+\twocolumn[%
+{\begin{center}
+\Huge Appendix: Artifact Description/Artifact Evaluation
+\end{center}}
+]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Artifact Description (AD)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendixAD
+
+\section{Overview of Contributions and Artifacts}
+
+\noindent\textbf{Paper identification.}
+This artifact description and evaluation accompanies the PDSW paper
+introducing \textsc{PILOT}, a lightweight CPU-based framework for online
+prediction and selection of error-bounded lossy-compression configurations for
+streaming light-source data. Throughout this form, \textsc{PILOT} is the paper
+codename and $A_1$ is its associated computational artifact.
+
+\subsection{Paper's Main Contributions}
+The main contributions of \textsc{PILOT} are summarized as follows:
+\begin{description}
+\item[$C_1$] We characterize compression efficiency and reconstruction quality
+across streaming light-source datasets, compressors, relative error bounds,
+quality objectives, and consecutive frames.
+
+\item[$C_2$] We introduce lightweight, compressor-specific Ridge models that
+use inexpensive frame statistics to predict CR, PSNR, and SSIM and rank
+candidate $\langle$compressor, error bound$\rangle$ pairs without exhaustively
+compressing every application frame.
+
+\item[$C_3$] We present a lightweight CPU-only online auto-tuning mechanism
+that trains on frames from the incoming stream, selects configurations using a
+user-defined joint quality--efficiency score, applies the selected configuration
+to future frames, and periodically retrains as new frames arrive. Replacing
+exhaustive trial-and-error search with model-guided selection achieves up to
+$66.64\times$ speedup while exposing a controllable trade-off among tuning
+overhead, selection accuracy, and compression quality.
+\end{description}
+
+\subsection{Computational Artifact}
+\begin{description}
+\item[$A_1$] The \textsc{PILOT} artifact contains the model and selection code, five
+archived compressor-result CSVs, a compact CSSI ROI figure input, committed
+reference run summaries, a manifest
+of the 21 paper experiments, a sequential batch runner, result-validation
+scripts, five original compression-experiment scripts, an environment
+specification, and a notebook that regenerates the
+paper's quantitative tables and figures. The development repository is
+available at \url{https://github.com/JiaxiangCxx/PILOT_PDSW26}. The immutable
+archive DOI will be inserted after artifact deposit.
+\end{description}
+
+\begin{center}
+\begin{tabular}{rll}
+\toprule
+Artifact & Contributions & Reproduced evidence \\
+\midrule
+$A_1$ & $C_1$ & Figures~1--2 \\
+      & $C_2$ & Figure~5 and Table~III \\
+      & $C_3$ & Figure~6 and Tables~IV--VI \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Artifact Identification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newartifact
+\artrel
+$A_1$ is the primary evaluation artifact. It supports all three contributions
+using archived compression measurements, so evaluators do not need the
+original beamline arrays, LibPressio, or the six compressor installations.
+The archived measurements under
+\texttt{lightsource\_data\_cmp\_results/} are consumed directly; the AD/AE
+workflow does not invoke a lossy compressor.
+The original compression scripts are included unchanged for reviewer
+convenience. Their execution is optional and requires the original datasets,
+LibPressio, and the corresponding compressor plugins.
+
+\artexp
+The complete workflow executes 21 unique model experiments listed in
+\texttt{artifact/paper\_experiment\_manifest.csv}:
+\begin{enumerate}
+\item five CR--PSNR--SSIM experiments, one for each dataset, with
+      $W/P=16/16$ and $\tau=1$;
+\item four additional SFC-L objectives (CR, PSNR, SSIM, and CR--PSNR), with
+      $W/P=16/16$ and $\tau=1$;
+\item seven SFC-L window/granularity experiments: $8/8$, $32/32$, and
+      $32/512$ at $\tau=1$, plus $32/512$ at
+      $\tau\in\{4,16,64,256\}$; and
+\item four additional CR--PSNR experiments on CSSI, FF-HEDM, SFC-GI, and
+      XPCS, with $W/P=16/16$ and $\tau=1$.
+\item one FF-HEDM PSNR-only experiment with $W/P=16/16$ and $\tau=1$ for
+      the rate--quality comparison in Figure~6.
+\end{enumerate}
+The SFC-L CR--PSNR--SSIM and CR--PSNR $16/16$, $\tau=1$ results are shared
+across studies and are each executed only once. Every new result is compared
+with its committed reference using frame counts and deterministic
+prediction/selection metrics. Runtime is recorded but is not required to match
+across hardware.
+
+\arttime
+Environment setup takes approximately 5 minutes when the Conda packages are
+already cached. On the UNC Charlotte CCI \texttt{cci-abc} reference server, the
+complete sequential 21-experiment workflow required exactly
+1023.515109~seconds (17.058585~minutes). This measurement includes all model
+runs, reference validation, and notebook post-processing, as recorded in
+\texttt{artifact/output/ad\_execution\_time.txt}. Runtime may vary with hardware
+and load on the shared server.
+
+\artin
+\artinpart{Hardware}
+The model and analysis require an x86-64 Linux CPU; no GPU is required. The
+reference system is the \texttt{cci-abc} server at the College of Computing and
+Informatics, University of North Carolina at Charlotte. It contains two Intel
+Xeon Silver 4214 processors at 2.20~GHz (12 physical cores per socket, two
+threads per core, 24 physical cores and 48 logical CPUs in total) and
+251.52~GiB RAM. At least 16~GB RAM and 36~GB free storage are recommended.
+
+\artinpart{Software}
+The reference host runs Ubuntu 24.04.4 LTS. The verified project-local
+environment uses Python 3.10.20, NumPy 2.2.5, pandas 2.3.3,
+scikit-learn 1.7.2, Matplotlib 3.10.6, and SciPy 1.15.3. Exact dependencies are
+listed in \texttt{artifact/environment.yml}. No GPU software or compression
+library is needed for the evaluated workflow. Git and Git LFS are required to
+retrieve the repository and its large SFC-L input CSV.
+
+\artinpart{Datasets / Inputs}
+The artifact includes archived CSVs for FF-HEDM
+($1440\times2048\times2048$), XPCS ($512\times1813\times1558$), CSSI
+($600\times1813\times1558$), SFC-L ($10000\times185\times194$), and SFC-GI
+($758\times1440\times1440$). Each row records the frame, compressor, relative
+error bound, measured CR, PSNR, SSIM, compression time, and precomputed frame
+statistics. These CSVs are the only data inputs used by the batch; compression
+is not rerun.
+
+\artinpart{Installation and Deployment}
+Clone the repository, retrieve its Git LFS objects, and create the isolated
+environment:
+\begin{verbatim}
+git clone https://github.com/JiaxiangCxx/PILOT_PDSW26.git
+cd PILOT_PDSW26
+git lfs pull
+bash artifact/setup_env.sh
+conda activate "$PWD/.conda/pilot-ae"
+\end{verbatim}
+The runner resolves all Python and Jupyter executables from this activated
+project-local environment. No compilation is required.
+
+\artcomp
+The workflow is
+$T_1\rightarrow T_2\rightarrow T_3\rightarrow T_4\rightarrow T_5$.
+$T_1$ validates every archived input and committed reference before starting
+the timed run. $T_2$ fits one compressor-specific Ridge model for every active
+metric using the current training window. $T_3$ predicts each candidate
+$\langle$compressor, error bound$\rangle$ pair, computes its predicted joint
+score, and selects the highest-scoring pair. $T_4$ evaluates the selected pair
+against the oracle and compares deterministic metrics with the committed
+reference. $T_5$ summarizes timings and results and executes
+\texttt{model/reproduce\_paper\_results.ipynb} to render and validate the
+paper tables and figures.
+
+The CR model uses quantized entropy, SVD truncation fraction, data standard
+deviation, relative error bound, and interaction terms. The PSNR model uses
+frame range and relative error bound. The SSIM model uses frame range, mean,
+variance, and relative error bound and predicts log-transformed SSIM loss.
+Unless stated otherwise, the workflow evaluates six compressors, uses
+compressor-specific Ridge models with $\alpha=10^{-6}$, equal weights for
+active metrics, no-gap windows, and all training frames. Prediction accuracy is
+\[
+100\,\operatorname{clip}\!\left(
+1-\frac{|M_{\mathrm{actual}}-M_{\mathrm{pred}}|}
+{|M_{\mathrm{actual}}|},0,1\right).
+\]
+Selection is correct only when both the selected compressor and relative error
+bound match the oracle pair.
+
+\artout
+Each run replaces \texttt{artifact/output/datasets/}. Every experiment
+directory retains only \texttt{compressor\_timing.csv},
+\texttt{joint\_prediction\_accuracy.csv},
+\texttt{joint\_selection\_comparison.csv}, and
+\texttt{run\_summary.log}. The output root also contains one complete-batch
+timing file, \texttt{ad\_execution\_time.txt}. The notebook renders the tables
+and figures during execution without saving duplicate derived files.
+
+For SFC-L at $W/P=16/16$ and $\tau=1$, the expected selection accuracies are
+89.75\% (CR), 76.17\% (PSNR), 45.29\% (SSIM), 94.59\% (CR--PSNR), and 94.66\%
+(CR--PSNR--SSIM). Across five datasets and six compressors, the expected mean
+prediction accuracies are 83.35\% for CR, 97.91\% for PSNR, and 76.29\% for
+SSIM.
+
+Under the CR--PSNR objective, the expected PILOT aggregate CR values are
+341.614, 74.029, 5.044, 4.197, and 10.737 for CSSI, FF-HEDM, SFC-GI, SFC-L, and
+XPCS, respectively. For the $32/512$ tuning study, increasing $\tau$ from 1 to
+256 reduces the number of decisions from 9,760 to 53 and increases speedup
+from 28.59$\times$ to 66.64$\times$, while selection accuracy decreases from
+90.73\% to 29.61\% and mean selected actual joint score decreases from 0.677
+to 0.623.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Artifact Evaluation (AE)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\appendixAE
+
+\arteval{1}
+\artin
+Create the environment as described above. From the artifact root, validate the
+archived inputs and list the exact paper experiment matrix:
+\begin{verbatim}
+python artifact/check_artifact.py
+bash artifact/run_all_paper_experiments.sh --list
+\end{verbatim}
+
+\artcomp
+The first command checks file presence, CSV schemas, row counts, and SHA-256
+hashes. The second command reads
+\texttt{artifact/paper\_experiment\_manifest.csv} and prints the dataset,
+objective, $W/P$, $\tau$, and paper mapping for every model experiment. It does
+not execute a model or compressor.
+
+\artout
+The validation command must terminate without an exception and print
+\texttt{Artifact validation passed}. The list command must report exactly 21
+experiments: five dataset-wide CR--PSNR--SSIM runs, four additional SFC-L
+objectives, seven SFC-L window/$\tau$ configurations, and four additional
+dataset-wide CR--PSNR runs. The SFC-L CR--PSNR run is shared between the
+objective study and the aggregate-CR table.
+
+\arteval{2}
+\artin
+Run the complete model evaluation sequentially so its wall-clock measurement is
+interpretable:
+\begin{verbatim}
+bash artifact/run_all_paper_experiments.sh
+\end{verbatim}
+The runner resolves \texttt{python} and \texttt{jupyter} from the activated
+project-local environment. It replaces the fixed generated-output tree, preventing
+stale and new experiment files from being mixed.
+
+\artcomp
+The runner reads only the five archived compression CSVs; the notebook also
+reads the compact CSSI frame-32 ROI CSV used by Figure~1. For each manifest
+entry, it trains the requested compressor-specific Ridge models, evaluates the
+no-gap prediction/selection schedule, writes model outputs, and invokes
+\texttt{artifact/compare\_reference.py}. It then executes
+\texttt{model/reproduce\_paper\_results.ipynb}. Experiments are run
+sequentially, and one end-to-end wall-clock duration is recorded for the AD.
+No compressor is invoked.
+
+\artout
+The final log must state
+\texttt{All 21 paper experiments completed and matched their references}.
+Confirm that each of the 21 experiment directories contains exactly the four
+model files listed in the AD output description. The notebook renders the paper
+figures and tables and checks their deterministic values, but does not save
+duplicate derived files under \texttt{artifact/output/}. Runtime may vary
+across systems; report
+\texttt{wall\_time\_s} from \texttt{ad\_execution\_time.txt} as the measured
+end-to-end artifact execution time.

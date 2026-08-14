@@ -1,0 +1,13 @@
+candidate frames: 10000
+application frames: 9968
+decision frames: 9968
+mean PSNR accuracy: 97.889629%
+mean CR accuracy: 89.379489%
+selected mean PSNR accuracy: 95.888459%
+selected mean CR accuracy: 88.248495%
+compressor + EB correct: 94.59%
+compressor correct: 99.13%
+EB correct: 94.71%
+selection coverage: 100.00%
+evaluation coverage: 100.00%
+mean relative joint-score gap: 0.414224%
